@@ -54,7 +54,7 @@ app.use(morgan("dev"));
 // ✅ CORS setup for deployed Vercel frontend
 const FRONTEND_URL = process.env.CLIENT_ORIGIN || "https://learnex-csvt4l41m-novas-projects-8121d3d6.vercel.app/";
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: CLIENT_ORIGIN,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
@@ -190,3 +190,4 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Learnex Server + WS running on port ${PORT}`));
 
 console.log("HF_API_KEY from env:", process.env.HF_API_KEY);
+
