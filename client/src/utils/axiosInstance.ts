@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api", // ✅ change if backend URL changes
+  baseURL: "https://learnex-hub.onrender.com/", // ✅ change if backend URL changes
 });
 
 // ✅ Interceptor to add token automatically
@@ -17,3 +17,4 @@ axiosInstance.interceptors.request.use(
 );
 
 export default axiosInstance;
+
