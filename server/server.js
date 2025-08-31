@@ -65,7 +65,7 @@ app.use(morgan("dev"));
 
 app.use(
   cors({
-    origin: ["https://learnex-hub.vercel.app", "http://localhost:5173"], // ✅ allow frontend prod + local
+    origin: "https://learnex-hub.vercel.app" // ✅ allow frontend prod + local
     credentials: true,
   })
 );
@@ -241,4 +241,5 @@ server.listen(PORT, () =>
 );
 
 console.log("HF_API_KEY from env:", process.env.HF_API_KEY);
+
 
