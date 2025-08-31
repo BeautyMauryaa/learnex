@@ -11,7 +11,6 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import multer from "multer";
 
-
 // 🗄️ DB + Models
 import connectDB from "./config/db.js";
 import GroupMessage from "./models/GroupMessage.js";
@@ -34,7 +33,6 @@ import groupRoutes from "./routes/groupRoutes.js";
 import stuSettingRoutes from "./routes/stuSettingRoutes.js"; 
 import studentRoutes from "./routes/student.routes.js";
 import quizzesRoutes from "./routes/quizRoutes.js";
-// Ask ai chatbot
 import askAiRoutes from "./routes/askAi.routes.js";
 import studentGroupRoutes from './routes/StudentGroup.js';
 
@@ -50,25 +48,18 @@ const server = http.createServer(app);
 // ========================================
 // 📦 MIDDLEWARE
 // ========================================
-
-
-
 app.use(helmet());
 app.use(morgan("dev"));
-// app.use(
-//   cors({
-//     origin: process.env.CLIENT_ORIGIN?.split(",") || "*",
-//     credentials: true,
-//   })
-// );
 
+// ✅ CORS setup for deployed Vercel frontend
+const FRONTEND_URL = process.env.CLIENT_ORIGIN || "https://learnex-csvt4l41m-novas-projects-8121d3d6.vercel.app";
+app.use(cors({
+  origin: FRONTEND_URL,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
 
-app.use(
-  cors({
-    origin: "https://learnex-hub.vercel.app" // ✅ allow frontend prod + local
-    credentials: true,
-  })
-);
 app.use(express.json({ limit: "10mb" }));
 app.use(rateLimit({ windowMs: 60_000, max: 200 }));
 
@@ -98,7 +89,7 @@ const quizSchema = new mongoose.Schema({
 });
 const Quiz = mongoose.model("Quiz", quizSchema);
 
-// File Upload (Optional)
+// File Upload
 const upload = multer({ dest: "uploads/" });
 
 // ========================================
@@ -121,54 +112,31 @@ app.use("/api/groups", groupRoutes);
 app.use("/api/stu-setting", stuSettingRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/quizzes", quizzesRoutes);
-app.use('/api/student-groups', studentGroupRoutes);
-// ai
+app.use("/api/student-groups", studentGroupRoutes);
 app.use("/api", askAiRoutes);
 
-// ✅ Quiz Endpoints
+// ✅ Quiz Endpoints (same as before)
 app.post("/api/quizzes/mcq", async (req, res) => {
   const { subject, topic, difficulty, numQuestions } = req.body;
-
   const questions = Array.from({ length: numQuestions }, (_, i) => ({
     id: i + 1,
     question: `Sample ${difficulty} question ${i + 1} on ${topic}`,
     options: ["A", "B", "C", "D"],
     correctAnswer: Math.floor(Math.random() * 4),
   }));
-
-  const quiz = new Quiz({
-    title: `${subject} - ${topic} Quiz`,
-    subject,
-    topic,
-    difficulty,
-    type: "mcq",
-    totalQuestions: numQuestions,
-    questions,
-  });
-
+  const quiz = new Quiz({ title: `${subject} - ${topic} Quiz`, subject, topic, difficulty, type: "mcq", totalQuestions: numQuestions, questions });
   await quiz.save();
   res.json(quiz);
 });
 
 app.post("/api/quizzes/subjective", async (req, res) => {
   const { subject, topic, difficulty, totalQuestions } = req.body;
-
   const questions = Array.from({ length: totalQuestions }, (_, i) => ({
     id: i + 1,
     question: `Explain ${topic} in detail (Q${i + 1})`,
-    marks: [2, 5, 10][i % 3],
+    marks: [2,5,10][i % 3],
   }));
-
-  const quiz = new Quiz({
-    title: `${subject} - ${topic} Subjective Quiz`,
-    subject,
-    topic,
-    difficulty,
-    type: "subjective",
-    totalQuestions,
-    questions,
-  });
-
+  const quiz = new Quiz({ title: `${subject} - ${topic} Subjective Quiz`, subject, topic, difficulty, type: "subjective", totalQuestions, questions });
   await quiz.save();
   res.json(quiz);
 });
@@ -187,8 +155,9 @@ app.get("/", (req, res) => {
 // ========================================
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    origin: FRONTEND_URL,
     methods: ["GET", "POST"],
+    credentials: true
   },
 });
 
@@ -198,33 +167,15 @@ io.on("connection", (socket) => {
   socket.on("joinGroup", async (groupId) => {
     socket.join(groupId);
     console.log(`📌 User ${socket.id} joined group ${groupId}`);
-
-    const history = await GroupMessage.find({ groupId })
-      .sort({ createdAt: -1 })
-      .limit(50)
-      .lean();
-
+    const history = await GroupMessage.find({ groupId }).sort({ createdAt: -1 }).limit(50).lean();
     socket.emit("loadHistory", history.reverse());
   });
 
   socket.on("sendMessage", async (data) => {
     const { groupId, senderId, text, fileUrl } = data;
-
-    const newMsg = new GroupMessage({
-      groupId,
-      senderId,
-      text,
-      fileUrl,
-    });
-
+    const newMsg = new GroupMessage({ groupId, senderId, text, fileUrl });
     await newMsg.save();
-
-    io.to(groupId).emit("receiveMessage", {
-      senderId,
-      text,
-      fileUrl,
-      createdAt: newMsg.createdAt,
-    });
+    io.to(groupId).emit("receiveMessage", { senderId, text, fileUrl, createdAt: newMsg.createdAt });
   });
 
   socket.on("disconnect", () => {
@@ -236,10 +187,6 @@ io.on("connection", (socket) => {
 // 🚀 START SERVER
 // ========================================
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () =>
-  console.log(`🚀 Learnex Server + WS running on port ${PORT}`)
-);
+server.listen(PORT, () => console.log(`🚀 Learnex Server + WS running on port ${PORT}`));
 
 console.log("HF_API_KEY from env:", process.env.HF_API_KEY);
-
-
