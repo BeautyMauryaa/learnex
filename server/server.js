@@ -50,11 +50,22 @@ const server = http.createServer(app);
 // ========================================
 // 📦 MIDDLEWARE
 // ========================================
+
+
+
 app.use(helmet());
 app.use(morgan("dev"));
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_ORIGIN?.split(",") || "*",
+//     credentials: true,
+//   })
+// );
+
+
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN?.split(",") || "*",
+    origin: ["https://learnex-hub.vercel.app", "http://localhost:5173"], // ✅ allow frontend prod + local
     credentials: true,
   })
 );
@@ -230,3 +241,4 @@ server.listen(PORT, () =>
 );
 
 console.log("HF_API_KEY from env:", process.env.HF_API_KEY);
+
