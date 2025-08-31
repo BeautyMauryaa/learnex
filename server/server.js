@@ -52,7 +52,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 
 // ✅ CORS setup for deployed Vercel frontend
-const FRONTEND_URL = process.env.CLIENT_ORIGIN || "https://learnex-csvt4l41m-novas-projects-8121d3d6.vercel.app";
+const FRONTEND_URL = process.env.CLIENT_ORIGIN || "https://learnex-csvt4l41m-novas-projects-8121d3d6.vercel.app/";
 app.use(cors({
   origin: FRONTEND_URL,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -115,7 +115,7 @@ app.use("/api/quizzes", quizzesRoutes);
 app.use("/api/student-groups", studentGroupRoutes);
 app.use("/api", askAiRoutes);
 
-// ✅ Quiz Endpoints (same as before)
+// ✅ Quiz Endpoints
 app.post("/api/quizzes/mcq", async (req, res) => {
   const { subject, topic, difficulty, numQuestions } = req.body;
   const questions = Array.from({ length: numQuestions }, (_, i) => ({
