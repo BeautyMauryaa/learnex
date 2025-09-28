@@ -13,14 +13,16 @@ At the moment:
 🔹 Many modules and improvements are still under development.  
 
 
-MONGO_URI=
-JWT_SECRET=supersecretjwtkey
-PORT=5000
-OPENAI_API_KEY=
-GEMINI_API_KEY=
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-FRONTEND_URL=http://localhost:5173
+create a .env file and put your link these: 
+
+- MONGO_URI=
+- JWT_SECRET=supersecretjwtkey
+- PORT=5000
+- OPENAI_API_KEY=
+- GEMINI_API_KEY=
+- EMAIL_USER=your-email@gmail.com
+- EMAIL_PASS=your-app-password
+- FRONTEND_URL=http://localhost:5173
 
 
 
