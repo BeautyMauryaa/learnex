@@ -12,6 +12,18 @@ At the moment:
 🔹 AI features have been integrated.  
 🔹 Many modules and improvements are still under development.  
 
+
+MONGO_URI=
+JWT_SECRET=supersecretjwtkey
+PORT=5000
+OPENAI_API_KEY=
+GEMINI_API_KEY=
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+FRONTEND_URL=http://localhost:5173
+
+
+
 Instead of rushing, I’ve committed to improving it every single day. Slowly, steadily — because I want to build the best version of what’s on my mind.
 
  So yeah, this is the repo — I’ve attached the frontend deployment link and will keep updating with more resources, documentation, and progress as the project evolves. This is just the beginning, and I’m excited to see how far it goes.
