@@ -9,7 +9,7 @@
 // export const getAccountInfo = async (req, res) => {
 //   try {
 //     const settings = await StuSetting.findOne({ user: req.user._id });
-//     if (!settings) return res.status(404).json({ msg: "Settings not found" });
+//     if (!settings) return res.status(404).json({ message: "Settings not found" });
 
 //     res.json({
 //       fullName: settings.fullName,
@@ -17,7 +17,7 @@
 //       mobile: settings.mobile,
 //     });
 //   } catch (err) {
-//     res.status(500).json({ msg: "Server error" });
+//     res.status(500).json({ message: "Server error" });
 //   }
 // };
 
@@ -37,9 +37,9 @@
 
 //     await User.findByIdAndUpdate(req.user._id, { fullName, email, mobile });
 
-//     res.json({ msg: "Account info updated", settings });
+//     res.json({ message: "Account info updated", settings });
 //   } catch (err) {
-//     res.status(500).json({ msg: "Server error" });
+//     res.status(500).json({ message: "Server error" });
 //   }
 // };
 
@@ -50,11 +50,11 @@
 // export const getPreferences = async (req, res) => {
 //   try {
 //     const settings = await StuSetting.findOne({ user: req.user._id });
-//     if (!settings) return res.status(404).json({ msg: "Settings not found" });
+//     if (!settings) return res.status(404).json({ message: "Settings not found" });
 
 //     res.json(settings.preferences);
 //   } catch (err) {
-//     res.status(500).json({ msg: "Server error" });
+//     res.status(500).json({ message: "Server error" });
 //   }
 // };
 
@@ -72,9 +72,9 @@
 //       { new: true }
 //     );
 
-//     res.json({ msg: "Preferences updated", settings });
+//     res.json({ message: "Preferences updated", settings });
 //   } catch (err) {
-//     res.status(500).json({ msg: "Server error" });
+//     res.status(500).json({ message: "Server error" });
 //   }
 // };
 
@@ -87,18 +87,18 @@
 //     const { currentPassword, newPassword } = req.body;
 
 //     const user = await User.findById(req.user._id);
-//     if (!user) return res.status(404).json({ msg: "User not found" });
+//     if (!user) return res.status(404).json({ message: "User not found" });
 
 //     const isMatch = await bcrypt.compare(currentPassword, user.password);
-//     if (!isMatch) return res.status(400).json({ msg: "Current password is wrong" });
+//     if (!isMatch) return res.status(400).json({ message: "Current password is wrong" });
 
 //     const hashed = await bcrypt.hash(newPassword, 10);
 //     user.password = hashed;
 //     await user.save();
 
-//     res.json({ msg: "Password updated successfully" });
+//     res.json({ message: "Password updated successfully" });
 //   } catch (err) {
-//     res.status(500).json({ msg: "Server error" });
+//     res.status(500).json({ message: "Server error" });
 //   }
 // };
 
@@ -109,10 +109,10 @@
 // export const getStuSettings = async (req, res) => {
 //   try {
 //     const settings = await StuSetting.findOne({ user: req.user._id });
-//     if (!settings) return res.status(404).json({ msg: "Settings not found" });
+//     if (!settings) return res.status(404).json({ message: "Settings not found" });
 
 //     res.json(settings);
 //   } catch (err) {
-//     res.status(500).json({ msg: "Server error" });
+//     res.status(500).json({ message: "Server error" });
 //   }
 // };

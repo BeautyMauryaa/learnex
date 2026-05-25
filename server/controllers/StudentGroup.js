@@ -28,11 +28,11 @@ export const inviteMember = async (req, res) => {
     const { email } = req.body; // friend’s email
 
     const group = await StudentGroup.findById(groupId);
-    if (!group) return res.status(404).json({ msg: "Group not found" });
+    if (!group) return res.status(404).json({ message: "Group not found" });
 
     // check ownership
     if (group.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ msg: "Only group owner can invite" });
+      return res.status(403).json({ message: "Only group owner can invite" });
     }
 
     // generate joinCode if not exists
@@ -42,9 +42,9 @@ export const inviteMember = async (req, res) => {
     }
 
     // TODO: send email/notification (for now just return joinCode)
-    res.json({ msg: "Invite sent", joinCode: group.joinCode });
+    res.json({ message: "Invite sent", joinCode: group.joinCode });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error });
+    res.status(500).json({ message: "Server error", error });
   }
 };
 

@@ -6,9 +6,9 @@ export const createSubmission = async (req, res) => {
   try {
     const submission = new QuizSubmission(req.body);
     await submission.save();
-    res.status(201).json({ msg: "Submission created", submission });
+    res.status(201).json({ message: "Submission created", submission });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -18,7 +18,7 @@ export const getSubmissions = async (req, res) => {
     const submissions = await QuizSubmission.find();
     res.json(submissions);
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -26,10 +26,10 @@ export const getSubmissions = async (req, res) => {
 export const getSubmission = async (req, res) => {
   try {
     const submission = await QuizSubmission.findById(req.params.id);
-    if (!submission) return res.status(404).json({ msg: "Not found" });
+    if (!submission) return res.status(404).json({ message: "Not found" });
     res.json(submission);
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -49,8 +49,8 @@ export const reviewSubmission = async (req, res) => {
       { new: true }
     );
 
-    res.json({ msg: "Review saved", updatedSubmission });
+    res.json({ message: "Review saved", updatedSubmission });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

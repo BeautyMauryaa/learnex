@@ -38,27 +38,27 @@ export const verifyToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(403).json({ msg: "No token provided or bad format" });
+      return res.status(403).json({ message: "No token provided or bad format" });
     }
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id).select("-password");
 
-    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     req.user = user; // attach user to request
     next();
   } catch (error) {
     console.error("Auth error:", error.message);
-    res.status(401).json({ msg: "Invalid or expired token" });
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
 // ✅ Only allow teachers
 export const verifyTeacher = (req, res, next) => {
   if (!req.user || req.user.role !== "teacher") {
-    return res.status(403).json({ msg: "Access denied: Teachers only" });
+    return res.status(403).json({ message: "Access denied: Teachers only" });
   }
   next();
 };

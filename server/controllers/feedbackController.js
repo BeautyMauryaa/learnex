@@ -4,7 +4,7 @@ import Feedback from "../models/Feedback.js";
 export const giveFeedback = async (req, res) => {
   try {
     if (req.user.role !== "teacher") {
-      return res.status(403).json({ msg: "Only teachers can give feedback" });
+      return res.status(403).json({ message: "Only teachers can give feedback" });
     }
 
     const { student, type, referenceId, message } = req.body;
@@ -20,7 +20,7 @@ export const giveFeedback = async (req, res) => {
     const savedFeedback = await feedback.save();
     res.status(201).json(savedFeedback);
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -28,14 +28,14 @@ export const giveFeedback = async (req, res) => {
 export const getTeacherFeedback = async (req, res) => {
   try {
     if (req.user.role !== "teacher") {
-      return res.status(403).json({ msg: "Only teachers can view this" });
+      return res.status(403).json({ message: "Only teachers can view this" });
     }
 
     const feedbacks = await Feedback.find({ teacher: req.user.id })
       .populate("student", "name email");
     res.json(feedbacks);
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -43,13 +43,13 @@ export const getTeacherFeedback = async (req, res) => {
 export const getStudentFeedback = async (req, res) => {
   try {
     if (req.user.role !== "student") {
-      return res.status(403).json({ msg: "Only students can view their feedback" });
+      return res.status(403).json({ message: "Only students can view their feedback" });
     }
 
     const feedbacks = await Feedback.find({ student: req.user.id })
       .populate("teacher", "name email");
     res.json(feedbacks);
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };

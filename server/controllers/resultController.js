@@ -8,7 +8,7 @@ export const createResult = async (req, res) => {
     const { examId, studentId, score, answers } = req.body;
 
     const exam = await Exam.findById(examId);
-    if (!exam) return res.status(404).json({ msg: "Exam not found" });
+    if (!exam) return res.status(404).json({ message: "Exam not found" });
 
     // calculate percentage
     const percentage = (score / exam.totalMarks) * 100;
@@ -36,6 +36,6 @@ export const createResult = async (req, res) => {
     res.status(201).json(result);
   } catch (error) {
     console.error("Error creating result:", error);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };

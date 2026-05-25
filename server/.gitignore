@@ -1,0 +1,8 @@
+.env
+nodemodules
+dist
+converage
+logs
+*.log
+*.tsbuildinfo
+*.js

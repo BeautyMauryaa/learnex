@@ -4,7 +4,7 @@ import Assignment from "../models/Assignment.js";
 export const createAssignment = async (req, res) => {
   try {
     if (req.user.role !== "teacher") {
-      return res.status(403).json({ msg: "Only teachers can create assignments" });
+      return res.status(403).json({ message: "Only teachers can create assignments" });
     }
 
     const { title, description, deadline, fileUrl } = req.body;
@@ -20,7 +20,7 @@ export const createAssignment = async (req, res) => {
     const savedAssignment = await assignment.save();
     res.status(201).json(savedAssignment);
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -28,13 +28,13 @@ export const createAssignment = async (req, res) => {
 export const getTeacherAssignments = async (req, res) => {
   try {
     if (req.user.role !== "teacher") {
-      return res.status(403).json({ msg: "Only teachers can view their assignments" });
+      return res.status(403).json({ message: "Only teachers can view their assignments" });
     }
 
     const assignments = await Assignment.find({ teacher: req.user.id });
     res.json(assignments);
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -43,7 +43,7 @@ export const updateAssignment = async (req, res) => {
   try {
     const assignment = await Assignment.findOne({ _id: req.params.id, teacher: req.user.id });
 
-    if (!assignment) return res.status(404).json({ msg: "Assignment not found" });
+    if (!assignment) return res.status(404).json({ message: "Assignment not found" });
 
     assignment.title = req.body.title || assignment.title;
     assignment.description = req.body.description || assignment.description;
@@ -53,7 +53,7 @@ export const updateAssignment = async (req, res) => {
     const updatedAssignment = await assignment.save();
     res.json(updatedAssignment);
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -62,10 +62,10 @@ export const deleteAssignment = async (req, res) => {
   try {
     const assignment = await Assignment.findOneAndDelete({ _id: req.params.id, teacher: req.user.id });
 
-    if (!assignment) return res.status(404).json({ msg: "Assignment not found" });
+    if (!assignment) return res.status(404).json({ message: "Assignment not found" });
 
-    res.json({ msg: "Assignment deleted successfully" });
+    res.json({ message: "Assignment deleted successfully" });
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };

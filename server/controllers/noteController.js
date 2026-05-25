@@ -8,7 +8,7 @@ export const createNote = async (req, res) => {
     const { title, subject, description, isPublic } = req.body;
 
     if (!title || !subject) {
-      return res.status(400).json({ msg: "Title and Subject are required" });
+      return res.status(400).json({ message: "Title and Subject are required" });
     }
 
     const newNote = new Note({
@@ -22,7 +22,7 @@ export const createNote = async (req, res) => {
     await newNote.save();
     res.status(201).json(newNote);
   } catch (err) {
-    res.status(500).json({ msg: "Server Error", error: err.message });
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
 
@@ -32,7 +32,7 @@ export const uploadNote = async (req, res) => {
     const { title, subject, description, isPublic } = req.body;
 
     if (!req.file) {
-      return res.status(400).json({ msg: "File is required" });
+      return res.status(400).json({ message: "File is required" });
     }
 
     const newNote = new Note({
@@ -49,7 +49,7 @@ export const uploadNote = async (req, res) => {
     await newNote.save();
     res.status(201).json(newNote);
   } catch (err) {
-    res.status(500).json({ msg: "Server Error", error: err.message });
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
 
@@ -59,7 +59,7 @@ export const getNotes = async (req, res) => {
     const notes = await Note.find().populate("uploadedBy", "name email");
     res.json(notes);
   } catch (err) {
-    res.status(500).json({ msg: "Server Error", error: err.message });
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
 
@@ -67,13 +67,13 @@ export const getNotes = async (req, res) => {
 export const toggleNoteVisibility = async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
-    if (!note) return res.status(404).json({ msg: "Note not found" });
+    if (!note) return res.status(404).json({ message: "Note not found" });
 
     note.isPublic = !note.isPublic;
     await note.save();
     res.json(note);
   } catch (err) {
-    res.status(500).json({ msg: "Server Error", error: err.message });
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
 
@@ -81,7 +81,7 @@ export const toggleNoteVisibility = async (req, res) => {
 export const deleteNote = async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
-    if (!note) return res.status(404).json({ msg: "Note not found" });
+    if (!note) return res.status(404).json({ message: "Note not found" });
 
     // remove file if exists
     const filePath = path.join("uploads", path.basename(note.fileUrl));
@@ -92,9 +92,9 @@ export const deleteNote = async (req, res) => {
     }
 
     await note.deleteOne();
-    res.json({ msg: "Note deleted successfully" });
+    res.json({ message: "Note deleted successfully" });
   } catch (err) {
-    res.status(500).json({ msg: "Server Error", error: err.message });
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
 
@@ -102,7 +102,7 @@ export const deleteNote = async (req, res) => {
 export const downloadNote = async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
-    if (!note) return res.status(404).json({ msg: "Note not found" });
+    if (!note) return res.status(404).json({ message: "Note not found" });
 
     note.downloads += 1;
     await note.save();
@@ -110,6 +110,6 @@ export const downloadNote = async (req, res) => {
     const filePath = path.join("uploads", path.basename(note.fileUrl));
     res.download(filePath);
   } catch (err) {
-    res.status(500).json({ msg: "Server Error", error: err.message });
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 };

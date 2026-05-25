@@ -19,7 +19,7 @@
 //     res.status(201).json(exam);
 //   } catch (error) {
 //     console.error("❌ Error creating exam:", error);
-//     res.status(500).json({ msg: "Server error", error: error.message });
+//     res.status(500).json({ message: "Server error", error: error.message });
 //   }
 // };
 
@@ -29,7 +29,7 @@
 //     const exams = await Exam.find({ teacher: req.user.id });
 //     res.json(exams);
 //   } catch (error) {
-//     res.status(500).json({ msg: "Server error", error: error.message });
+//     res.status(500).json({ message: "Server error", error: error.message });
 //   }
 // };
 
@@ -41,10 +41,10 @@
 //       { $set: req.body },
 //       { new: true }
 //     );
-//     if (!exam) return res.status(404).json({ msg: "Exam not found" });
+//     if (!exam) return res.status(404).json({ message: "Exam not found" });
 //     res.json(exam);
 //   } catch (error) {
-//     res.status(500).json({ msg: "Server error", error: error.message });
+//     res.status(500).json({ message: "Server error", error: error.message });
 //   }
 // };
 
@@ -52,10 +52,10 @@
 // export const deleteExam = async (req, res) => {
 //   try {
 //     const exam = await Exam.findByIdAndDelete(req.params.id);
-//     if (!exam) return res.status(404).json({ msg: "Exam not found" });
-//     res.json({ msg: "Exam deleted successfully" });
+//     if (!exam) return res.status(404).json({ message: "Exam not found" });
+//     res.json({ message: "Exam deleted successfully" });
 //   } catch (error) {
-//     res.status(500).json({ msg: "Server error", error: error.message });
+//     res.status(500).json({ message: "Server error", error: error.message });
 //   }
 // };
 
@@ -67,7 +67,7 @@ export const createExam = async (req, res) => {
     const { title, description, duration, totalMarks, deadline, questions } = req.body;
 
     if (!title || !duration || !totalMarks || !questions || questions.length === 0) {
-      return res.status(400).json({ msg: "All required fields must be provided" });
+      return res.status(400).json({ message: "All required fields must be provided" });
     }
 
     const exam = new Exam({
@@ -81,10 +81,10 @@ export const createExam = async (req, res) => {
     });
 
     await exam.save();
-    res.status(201).json({ msg: "Exam created successfully", exam });
+    res.status(201).json({ message: "Exam created successfully", exam });
   } catch (error) {
     console.error("❌ Error creating exam:", error);
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -94,7 +94,7 @@ export const getTeacherExams = async (req, res) => {
     const exams = await Exam.find({ teacher: req.user.id }).sort({ createdAt: -1 });
     res.json(exams);
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -102,16 +102,16 @@ export const getTeacherExams = async (req, res) => {
 export const getExamById = async (req, res) => {
   try {
     const exam = await Exam.findById(req.params.id);
-    if (!exam) return res.status(404).json({ msg: "Exam not found" });
+    if (!exam) return res.status(404).json({ message: "Exam not found" });
 
     // Only allow teacher who created it to view/edit
     if (exam.teacher.toString() !== req.user.id) {
-      return res.status(403).json({ msg: "Not authorized" });
+      return res.status(403).json({ message: "Not authorized" });
     }
 
     res.json(exam);
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -119,10 +119,10 @@ export const getExamById = async (req, res) => {
 export const updateExam = async (req, res) => {
   try {
     const exam = await Exam.findById(req.params.id);
-    if (!exam) return res.status(404).json({ msg: "Exam not found" });
+    if (!exam) return res.status(404).json({ message: "Exam not found" });
 
     if (exam.teacher.toString() !== req.user.id) {
-      return res.status(403).json({ msg: "Not authorized" });
+      return res.status(403).json({ message: "Not authorized" });
     }
 
     const updatedExam = await Exam.findByIdAndUpdate(
@@ -131,9 +131,9 @@ export const updateExam = async (req, res) => {
       { new: true }
     );
 
-    res.json({ msg: "Exam updated successfully", exam: updatedExam });
+    res.json({ message: "Exam updated successfully", exam: updatedExam });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -141,15 +141,15 @@ export const updateExam = async (req, res) => {
 export const deleteExam = async (req, res) => {
   try {
     const exam = await Exam.findById(req.params.id);
-    if (!exam) return res.status(404).json({ msg: "Exam not found" });
+    if (!exam) return res.status(404).json({ message: "Exam not found" });
 
     if (exam.teacher.toString() !== req.user.id) {
-      return res.status(403).json({ msg: "Not authorized" });
+      return res.status(403).json({ message: "Not authorized" });
     }
 
     await exam.deleteOne();
-    res.json({ msg: "Exam deleted successfully" });
+    res.json({ message: "Exam deleted successfully" });
   } catch (error) {
-    res.status(500).json({ msg: "Server error", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
