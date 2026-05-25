@@ -5,7 +5,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import { Link } from '../components/Link';
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api/auth";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 const quotes = [
   { text: "Education is not preparation for life; education is life itself.", author: "John Dewey" },
@@ -124,7 +124,9 @@ const LoginPage: React.FC = () => {
     setServerError('');
 
     try {
-const url = activeView === 'login' ? `${API_BASE}/login` : `${API_BASE}/signup`;
+const url = activeView === 'login'
+  ? `${API_BASE}/api/auth/login`
+  : `${API_BASE}/api/auth/signup`;
       const payload = { ...formData };
       const response = await fetch(url, {
         method: 'POST',

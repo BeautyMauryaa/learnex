@@ -48,33 +48,6 @@ const AskAIPage: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  // const handleSendMessage = async () => {
-  // if (!inputValue.trim()) return;
-
-  // const userMessage: ChatMessage = {
-  //   id: Date.now().toString(),
-  //   type: "user",
-  //   content: inputValue,
-  //   timestamp: new Date(),
-  // };
-
-  //   setMessages((prev) => [...prev, userMessage]);
-  // setInputValue("");
-  // setIsTyping(true);
-  
-
-  //   // Simulate AI response
-  //   setTimeout(() => {
-  //     const aiResponse: ChatMessage = {
-  //       id: (Date.now() + 1).toString(),
-  //       type: 'ai',
-  //       content: generateAIResponse(inputValue),
-  //       timestamp: new Date()
-  //     };
-  //     setMessages(prev => [...prev, aiResponse]);
-  //     setIsTyping(false);
-  //   }, 2000);
-  // };
 
   const handleSendMessage = async () => {
   if (!inputValue.trim()) return;
@@ -112,7 +85,7 @@ const AskAIPage: React.FC = () => {
       content: "⚠️ Sorry, there was a problem contacting Learnex AI.",
       timestamp: new Date(),
     };
-    setMessages((prev) => [...prev, errorMsg]);
+    setMessages((prev) => [...prev, errormessage]);
   } finally {
     setIsTyping(false);
   }

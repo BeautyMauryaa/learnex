@@ -3,7 +3,7 @@
 import axios from "axios";
 
 // ✅ Use deployed backend URL from Vercel env
-const API_BASE = import.meta.env.VITE_API_URL; // must be set in Vercel env variables
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";// must be set in Vercel env variables
 export const API = axios.create({
   baseURL: API_BASE,
   headers: { "Content-Type": "application/json" },
