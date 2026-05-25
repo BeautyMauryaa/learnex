@@ -51,8 +51,8 @@ const GroupStudyPage: React.FC = () => {
   // Read ?code=XYZ
   const [searchParams] = useSearchParams();
 
-  const showToastMessage = (msg: string, type: ToastType) => {
-    setToastMessage(msg);
+  const showToastMessage = (message: string, type: ToastType) => {
+    setToastMessage(message);
     setToastType(type);
     setShowToast(true);
   };
@@ -61,8 +61,8 @@ const GroupStudyPage: React.FC = () => {
   useEffect(() => {
     socket = io("http://localhost:5000");
 
-    socket.on("receiveMessage", (msg: ChatMessage) => {
-      setChatMessages((prev) => [...prev, { ...msg, isSelf: false }]);
+    socket.on("receiveMessage", (message: ChatMessage) => {
+      setChatMessages((prev) => [...prev, { ...message, isSelf: false }]);
     });
 
     return () => {
@@ -152,14 +152,14 @@ const GroupStudyPage: React.FC = () => {
     e.preventDefault();
     if (!newMessage.trim() || !currentGroupId) return;
 
-    const localMsg: ChatMessage = {
+    const localmessage: ChatMessage = {
       sender: "You",
       message: newMessage.trim(),
       timestamp: new Date(),
       isSelf: true,
     };
 
-    setChatMessages((prev) => [...prev, localMsg]);
+    setChatMessages((prev) => [...prev, localmessage]);
 
     socket.emit("sendMessage", {
       groupId: currentGroupId,

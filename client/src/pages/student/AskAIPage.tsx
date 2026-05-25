@@ -106,7 +106,7 @@ const AskAIPage: React.FC = () => {
     setMessages((prev) => [...prev, aiResponse]);
   } catch (err) {
     console.error("❌ AI request error:", err);
-    const errorMsg: ChatMessage = {
+    const errormessage: ChatMessage = {
       id: (Date.now() + 2).toString(),
       type: "ai",
       content: "⚠️ Sorry, there was a problem contacting Learnex AI.",

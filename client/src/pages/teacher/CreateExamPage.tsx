@@ -174,7 +174,7 @@ const CreateExamPage: React.FC<{ examId?: string }> = ({ examId }) => {
         questions: mappedQuestions,
       };
 
-      const res = await axios.post("http://localhost:5000/api/teacher/exams", payload, {
+      const res = await axios.post("http://localhost:5000/api/exams", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
