@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   Clock, 
-  // Calendar,
-  // BarChart2,
-  CheckCircle,
-  AlertCircle,
-  Target,
-  Star,
-  TrendingUp,
-  ChevronDown,
-  ChevronUp,
-  Award,
+  CheckCircle, 
+  AlertCircle, 
+  Target, 
+  Star, 
+  TrendingUp, 
+  ChevronDown, 
+  ChevronUp, 
+  Award, 
   Calendar
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../components/Button';
+
+const API_BASE = import.meta.env.VITE_API_URL;
 
 interface ExamResult {
   exam: {
@@ -34,44 +34,6 @@ interface ExamResult {
   }[];
   createdAt: string;
 }
-
-// Mock data for testing
-const mockGradesData: ExamResult[] = [
-  {
-    exam: { name: "Math Midterm", totalMarks: 100, date: "2025-05-12" },
-    score: 72,
-    grade: "B",
-    visible: true,
-    answers: [
-      { questionId: 1, givenAnswer: "A", isCorrect: true, obtainedMarks: 4 },
-      { questionId: 2, givenAnswer: "C", isCorrect: false, obtainedMarks: 0 },
-      { questionId: 3, givenAnswer: "B", isCorrect: true, obtainedMarks: 5 },
-      { questionId: 4, givenAnswer: "D", isCorrect: true, obtainedMarks: 3 },
-      { questionId: 5, givenAnswer: "A", isCorrect: false, obtainedMarks: 0 }
-    ],
-    createdAt: "2025-05-13"
-  },
-  {
-    exam: { name: "Physics Quiz", totalMarks: 50, date: "2025-05-15" },
-    score: 22,
-    grade: "D",
-    visible: true,
-    answers: [
-      { questionId: 1, givenAnswer: "B", isCorrect: false, obtainedMarks: 0 },
-      { questionId: 2, givenAnswer: "A", isCorrect: true, obtainedMarks: 3 },
-      { questionId: 3, givenAnswer: "C", isCorrect: false, obtainedMarks: 0 }
-    ],
-    createdAt: "2025-05-16"
-  },
-  {
-    exam: { name: "Chemistry Test", totalMarks: 75, date: "2025-05-18" },
-    score: 40,
-    grade: "C",
-    visible: false,
-    answers: [],
-    createdAt: "2025-05-19"
-  }
-];
 
 const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, index }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
@@ -102,7 +64,6 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
       transition={{ duration: 0.3, delay: index * 0.1 }}
       className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
     >
-      {/* Collapsed Header */}
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
@@ -125,7 +86,7 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
               </div>
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-1" />
-                <span>{result.exam.date}</span>
+                <span>{new Date(result.exam.date).toLocaleDateString()}</span>
               </div>
             </div>
           </div>
@@ -137,16 +98,11 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
             <span className="text-sm font-medium">
               {isExpanded ? 'Close Details' : 'View Details'}
             </span>
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
+            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
         </div>
       </div>
       
-      {/* Expanded Content */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -159,7 +115,6 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
             <div className="p-6">
               {result.visible ? (
                 <div className="space-y-6">
-                  {/* Progress Bar */}
                   <div>
                     <div className="flex justify-between text-sm text-gray-600 mb-2">
                       <span>Score Percentage</span>
@@ -179,19 +134,17 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
                     </div>
                   </div>
                   
-                  {/* Exam Details */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-500">Exam Date:</span>
-                      <span className="ml-2 font-medium text-gray-900">{result.exam.date}</span>
+                      <span className="ml-2 font-medium text-gray-900">{new Date(result.exam.date).toLocaleDateString()}</span>
                     </div>
                     <div>
                       <span className="text-gray-500">Published Date:</span>
-                      <span className="ml-2 font-medium text-gray-900">{result.createdAt}</span>
+                      <span className="ml-2 font-medium text-gray-900">{new Date(result.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                   
-                  {/* Question-wise Details */}
                   {result.answers.length > 0 && (
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-4">Question-wise Performance</h4>
@@ -199,42 +152,24 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
                         <table className="min-w-full divide-y divide-gray-200">
                           <thead className="bg-gray-50">
                             <tr>
-                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Question No.
-                              </th>
-                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Your Answer
-                              </th>
-                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Result
-                              </th>
-                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Marks
-                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Question No.</th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Your Answer</th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Result</th>
+                              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marks</th>
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
                             {result.answers.map((answer) => (
                               <tr key={answer.questionId} className="hover:bg-gray-50">
-                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                  Q{answer.questionId}
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                  {answer.givenAnswer}
-                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Q{answer.questionId}</td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{answer.givenAnswer}</td>
                                 <td className="px-4 py-3 whitespace-nowrap">
-                                  <span className={`inline-flex items-center text-sm font-medium ${
-                                    answer.isCorrect ? 'text-green-600' : 'text-red-600'
-                                  }`}>
+                                  <span className={`inline-flex items-center text-sm font-medium ${answer.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
                                     {answer.isCorrect ? '✔️' : '❌'}
-                                    <span className="ml-1">
-                                      {answer.isCorrect ? 'Correct' : 'Incorrect'}
-                                    </span>
+                                    <span className="ml-1">{answer.isCorrect ? 'Correct' : 'Incorrect'}</span>
                                   </span>
                                 </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                                  {answer.obtainedMarks}
-                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{answer.obtainedMarks}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -248,9 +183,7 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <AlertCircle className="h-8 w-8 text-gray-400" />
                   </div>
-                  <p className="text-gray-600 italic">
-                    This result is currently hidden by your teacher.
-                  </p>
+                  <p className="text-gray-600 italic">This result is currently hidden by your teacher.</p>
                 </div>
               )}
             </div>
@@ -262,18 +195,27 @@ const GradeCard: React.FC<{ result: ExamResult; index: number }> = ({ result, in
 };
 
 const DashboardPage: React.FC = () => {
-  const [gradesData] = React.useState<ExamResult[]>(mockGradesData);
-  
+  const [studentName] = useState(() => {
+    const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+    return userData?.name || "Student";
+  });
+
+  // Real data states
+  const [gradesData, setGradesData] = useState<ExamResult[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
+
+  // Static UI configurations
   const upcomingExams = [
-    { subject: 'Mathematics', date: '2024-03-15', type: 'Mid-term', status: 'pending', color: 'bg-blue-100 text-blue-800' },
-    { subject: 'Physics', date: '2024-03-18', type: 'Quiz', status: 'pending', color: 'bg-purple-100 text-purple-800' },
-    { subject: 'Chemistry', date: '2024-03-20', type: 'Final', status: 'pending', color: 'bg-green-100 text-green-800' },
+    { subject: 'Mathematics', date: '2026-06-15', type: 'Mid-term', color: 'bg-blue-100 text-blue-800' },
+    { subject: 'Physics', date: '2026-06-18', type: 'Quiz', color: 'bg-purple-100 text-purple-800' },
+    { subject: 'Chemistry', date: '2026-06-20', type: 'Final', color: 'bg-green-100 text-green-800' },
   ];
 
   const recentActivities = [
-    { type: 'Quiz Completed', subject: 'Biology', score: '85%', date: '2 hours ago', icon: CheckCircle },
-    { type: 'Notes Created', subject: 'Chemistry', topic: 'Organic Compounds', date: '5 hours ago', icon: BookOpen },
-    { type: 'Study Session', duration: '2 hours', subject: 'Physics', date: 'Yesterday', icon: Clock },
+    { type: 'Quiz Completed', subject: 'Biology', val: '85%', date: '2 hours ago', icon: CheckCircle },
+    { type: 'Notes Created', subject: 'Chemistry', val: 'Organic', date: '5 hours ago', icon: BookOpen },
+    { type: 'Study Session', val: '2 hours', subject: 'Physics', date: 'Yesterday', icon: Clock },
   ];
 
   const quickActions = [
@@ -282,11 +224,72 @@ const DashboardPage: React.FC = () => {
     { title: 'Join Group', icon: Star, color: 'bg-purple-100 text-purple-800' },
   ];
 
-  const motivationalQuotes = [
-    "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-    "The future depends on what you do today.",
-    "Don't watch the clock; do what it does. Keep going."
-  ];
+  // Fetch real exam data from Backend
+ // Replace the useEffect block inside your DashboardPage component with this:
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError("No authentication token found. Please sign in again.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`${API_BASE}/api/student/grades`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        // 1. First check if the response is actually valid JSON text to avoid HTML parser crashes
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error(`Server did not return JSON. (Status: ${response.status} ${response.statusText})`);
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load grade statistics.");
+        }
+
+        setGradesData(data.results || data);
+      } catch (err: any) {
+        console.error("Dashboard Fetch Error:", err);
+        
+        // Provide clear, actionable debugging info directly on screen
+        if (err.message.includes("Server did not return JSON")) {
+          setError(`${err.message}. Please verify that the endpoint GET ${API_BASE}/api/student/grades is configured correctly in your backend code.`);
+        } else {
+          setError(err.message || "Something went wrong while fetching data.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-indigo-600 font-medium">
+        Loading your dashboard data...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 max-w-md mx-auto my-12 bg-red-50 border border-red-200 rounded-xl text-center">
+        <AlertCircle className="h-10 w-10 text-red-500 mx-auto mb-3" />
+        <p className="text-red-700 font-medium">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -294,11 +297,10 @@ const DashboardPage: React.FC = () => {
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
         className="text-center mb-8"
       >
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Hi, John! Ready to conquer exams? 🚀
+          Hi, {studentName}! Ready to conquer exams? 🚀
         </h1>
         <p className="text-gray-600">Here's your study progress and upcoming tasks</p>
       </motion.div>
@@ -308,10 +310,8 @@ const DashboardPage: React.FC = () => {
         {quickActions.map((action, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className={`${action.color} p-4 rounded-xl cursor-pointer hover:scale-105 transition-transform`}
+            whileHover={{ scale: 1.03 }}
+            className={`${action.color} p-4 rounded-xl cursor-pointer shadow-sm`}
           >
             <div className="flex items-center">
               <action.icon className="h-6 w-6 mr-3" />
@@ -321,14 +321,9 @@ const DashboardPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Stats Overview */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="bg-white rounded-xl shadow p-6 border border-gray-100"
-        >
+        <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
           <div className="flex items-center">
             <div className="p-3 bg-indigo-100 rounded-lg">
               <BookOpen className="h-6 w-6 text-indigo-600" />
@@ -344,14 +339,9 @@ const DashboardPage: React.FC = () => {
             </div>
             <p className="text-xs text-gray-500 mt-1">75% of weekly goal</p>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="bg-white rounded-xl shadow p-6 border border-gray-100"
-        >
+        <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
           <div className="flex items-center">
             <div className="p-3 bg-green-100 rounded-lg">
               <Target className="h-6 w-6 text-green-600" />
@@ -367,14 +357,9 @@ const DashboardPage: React.FC = () => {
             </div>
             <p className="text-xs text-gray-500 mt-1">Last 7 quizzes</p>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="bg-white rounded-xl shadow p-6 border border-gray-100"
-        >
+        <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
           <div className="flex items-center">
             <div className="p-3 bg-blue-100 rounded-lg">
               <TrendingUp className="h-6 w-6 text-blue-600" />
@@ -390,14 +375,9 @@ const DashboardPage: React.FC = () => {
               <span>Best: 15 days</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.3 }}
-          className="bg-white rounded-xl shadow p-6 border border-gray-100"
-        >
+        <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
           <div className="flex items-center">
             <div className="p-3 bg-purple-100 rounded-lg">
               <Star className="h-6 w-6 text-purple-600" />
@@ -413,9 +393,10 @@ const DashboardPage: React.FC = () => {
             </div>
             <p className="text-xs text-gray-500 mt-1">1,240 XP to Level 5</p>
           </div>
-        </motion.div>
+        </div>
       </div>
 
+      {/* Main Tables Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Exams */}
         <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
@@ -425,13 +406,7 @@ const DashboardPage: React.FC = () => {
           </div>
           <div className="space-y-4">
             {upcomingExams.map((exam, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-              >
+              <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center">
                   <div className={`p-2 rounded-lg ${exam.color} mr-3`}>
                     <AlertCircle className="h-5 w-5" />
@@ -442,15 +417,15 @@ const DashboardPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">{exam.date}</p>
+                  <p className="text-sm font-medium text-gray-900">{new Date(exam.date).toLocaleDateString()}</p>
                   <p className="text-xs text-gray-500">Upcoming</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* My Grades & Results */}
+        {/* Real Dynamic Grades Section */}
         <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">My Grades & Results</h2>
@@ -464,15 +439,15 @@ const DashboardPage: React.FC = () => {
             ) : (
               <div className="text-center py-8">
                 <Award className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No exam results available yet</p>
+                <p className="text-gray-500">No exam results found on your profile.</p>
               </div>
             )}
           </div>
         </div>
       </div>
 
+      {/* Activity Logs */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activity */}
         <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
@@ -482,13 +457,7 @@ const DashboardPage: React.FC = () => {
             {recentActivities.map((activity, index) => {
               const Icon = activity.icon;
               return (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                >
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center">
                     <Icon className="h-5 w-5 text-indigo-600 mr-3" />
                     <div>
@@ -497,30 +466,15 @@ const DashboardPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">
-                      {activity.score || activity.duration || activity.topic}
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">{activity.val}</p>
                     <p className="text-xs text-gray-500">{activity.date}</p>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
         </div>
       </div>
-
-      {/* Motivational Quote */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-xl p-8 text-center"
-      >
-        <blockquote className="text-xl font-medium text-white mb-4">
-          {motivationalQuotes[0]}
-        </blockquote>
-        <p className="text-indigo-200">Keep pushing forward, you're doing great!</p>
-      </motion.div>
     </div>
   );
 };

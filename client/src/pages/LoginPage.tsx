@@ -100,6 +100,7 @@ const LoginPage: React.FC = () => {
   };
 
   // ---------------- SUBMIT HANDLER ----------------
+ // ---------------- SUBMIT HANDLER (UPDATED) ----------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -124,10 +125,15 @@ const LoginPage: React.FC = () => {
     setServerError('');
 
     try {
-const url = activeView === 'login'
-  ? `${API_BASE}/api/auth/login`
-  : `${API_BASE}/api/auth/signup`;
-      const payload = { ...formData };
+      const url = activeView === 'login'
+        ? `${API_BASE}/api/auth/login`
+        : `${API_BASE}/api/auth/signup`;
+
+      // Clean up payload based on active view so we don't pass empty/unnecessary strings
+      const payload = activeView === 'login' 
+        ? { email: formData.email, password: formData.password, role: formData.role }
+        : { ...formData };
+
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,7 +142,11 @@ const url = activeView === 'login'
 
       const data = await response.json();
 
-      if (!response.ok) throw new Error(data.message || 'Something went wrong');
+      if (!response.ok) {
+        // This will now capture "User not found", "Wrong password", etc., from your backend
+        setServerError(data.message || "Authentication failed");
+        return;
+      }
 
       // Save token & user info
       localStorage.setItem('token', data.token);
@@ -146,8 +156,16 @@ const url = activeView === 'login'
       // Redirect
       if (data.user.role === 'student') navigate('/student/dashboard');
       else navigate('/teacher');
+
     } catch (err: any) {
-      setServerError(err.message);
+      console.error("Auth Error:", err);
+      
+      // Catch native browser connection dropping / server offline errors gracefully
+      if (err.message === "Failed to fetch") {
+        setServerError("Cannot connect to server. Please check if your backend is running and CORS is enabled.");
+      } else {
+        setServerError(err.message || "An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
