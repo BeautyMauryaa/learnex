@@ -48,17 +48,37 @@ const server = http.createServer(app);
 // ========================================
 // 📦 MIDDLEWARE
 // ========================================
-app.use(helmet());
+// ========================================
+// 📦 MIDDLEWARE (UPDATED FOR LOCAL DEV)
+// ========================================
+app.use(helmet({
+  crossOriginResourcePolicy: false, // Prevents Helmet from blocking local media/api streams
+}));
 app.use(morgan("dev"));
 
-// ✅ CORS setup for deployed Vercel frontend
-const FRONTEND_URL =
-  process.env.CLIENT_ORIGIN ||
-  "https://learnex-csvt4l41m-novas-projects-8121d3d6.vercel.app";
+// Complete Local + Deployed CORS fallback array
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://learnex-csvt4l41m-novas-projects-8121d3d6.vercel.app"
+];
+
+if (process.env.CLIENT_ORIGIN) {
+  allowedOrigins.push(process.env.CLIENT_ORIGIN);
+}
 
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl, or Postman)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error(`CORS Blocked: Origin ${origin} not explicitly allowed.`), false);
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -68,9 +88,18 @@ app.use(
 app.use(express.json({ limit: "10mb" }));
 app.use(rateLimit({ windowMs: 60_000, max: 200 }));
 
-// static uploads
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+// ... [Keep your database connection and routes exactly as they are] ...
+
+// ========================================
+// 🔌 SOCKET.IO (UPDATED FOR MULTIPLE ORIGINS)
+// ========================================
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins, // Links directly to our allowed origins array
+    methods: ["GET", "POST"],
+    credentials: true
+  },
+});
 
 // ========================================
 // 🌐 DATABASE CONNECT
@@ -158,13 +187,13 @@ app.get("/", (req, res) => {
 // ========================================
 // 🔌 SOCKET.IO
 // ========================================
-const io = new Server(server, {
-  cors: {
-    origin: FRONTEND_URL,
-    methods: ["GET", "POST"],
-    credentials: true
-  },
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: FRONTEND_URL,
+//     methods: ["GET", "POST"],
+//     credentials: true
+//   },
+// });
 
 io.on("connection", (socket) => {
   console.log("🔌 User connected:", socket.id);

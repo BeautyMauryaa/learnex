@@ -369,11 +369,10 @@ router.post("/ask-ai", async (req, res) => {
     }
 
     console.log("✅ askAi route loaded");
-
+console.log("Using Gemini Model:", "gemini-1.5-flash-latest");
     const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-latest"
-});
-
+      model: "gemini-1.5-flash-latest",
+    });
 
     // Call Gemini
     const result = await model.generateContent({
