@@ -1,8 +1,9 @@
+node_modules/
 .env
-nodemodules
-dist
-converage
-logs
+.env.*
+!.env.example
+dist/
+coverage/
+logs/
 *.log
 *.tsbuildinfo
-*.js
