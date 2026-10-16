@@ -36,7 +36,7 @@ cd server
 npm install
 ```
 
-Create a `.env` file in `server/` and set the environment values required by the features you run. For example:
+Copy `server/.env.example` to `server/.env` and adjust the environment values for the features you run. The template includes examples:
 
 ```env
 PORT=5000
@@ -67,7 +67,7 @@ cd client
 npm install
 ```
 
-Create `client/.env` with:
+Copy `client/.env.example` to `client/.env` (or create the file with this value):
 
 ```env
 VITE_API_URL=http://localhost:5000
