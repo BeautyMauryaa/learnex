@@ -1,32 +1,94 @@
-# Learnex (Temporary Name)
+# Learnex
 
-Welcome to Learnex (temporary name — will be updated once I finalize something unique).
+Learnex is an AI-powered learning platform in active development, designed to bring student and teacher workflows—such as study materials, notes, assignments, and exams—into one place.
 
-This project is very close to my heart. For the last 2–3 months, I’ve been pouring my time into building this AI-driven platform. It’s not finished yet — there’s still a long road ahead — but I wanted to share it anyway.
+This is a work in progress. Some backend routes and AI integrations are connected, while other features and documentation are still being developed.
 
-Why? Because building something meaningful isn’t a one-month task. It takes patience, consistency, and growth, and I’ve realized that creating my vision of Learnex will be a step-by-step journey.
+## Current direction
 
-At the moment:
+- Organize learning resources and study materials
+- Support student and teacher workflows
+- Explore AI-assisted learning features
+- Connect frontend and backend services
 
-🔹 Some backend parts are already connected.  
-🔹 AI features have been integrated.  
-🔹 Many modules and improvements are still under development.  
+## Tech stack
 
+- **Frontend:** React, Vite, TypeScript, Tailwind CSS
+- **Backend:** Node.js, Express
+- **Database:** MongoDB with Mongoose
+- **Realtime:** Socket.IO
+- **Integrations:** Google Generative AI, OpenAI, and supporting APIs where configured
 
-create a .env file and put your link these: 
+## Repository layout
 
-- MONGO_URI=
-- JWT_SECRET=supersecretjwtkey
-- PORT=5000
-- OPENAI_API_KEY=
-- GEMINI_API_KEY=
-- EMAIL_USER=your-email@gmail.com
-- EMAIL_PASS=your-app-password
-- FRONTEND_URL=http://localhost:5173
+- `client/` — Vite frontend used for local development
+- `server/` — Express API and backend services
+- `Learnex-Frontend/` — additional frontend directory currently present in the repository; review before deciding which frontend copy should be kept long-term
 
+## Run locally
 
+You need Node.js and access to a MongoDB instance.
 
-Instead of rushing, I’ve committed to improving it every single day. Slowly, steadily — because I want to build the best version of what’s on my mind.
+### 1. Configure the backend
 
- So yeah, this is the repo — I’ve attached the frontend deployment link and will keep updating with more resources, documentation, and progress as the project evolves. This is just the beginning, and I’m excited to see how far it goes.
+```bash
+cd server
+npm install
+```
 
+Create a `.env` file in `server/` and set the environment values required by the features you run. For example:
+
+```env
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/learnex
+JWT_SECRET=replace-with-a-long-random-secret
+CLIENT_ORIGIN=http://localhost:5173
+HF_API_KEY=
+OPENAI_API_KEY=
+GEMINI_API_KEY=
+EMAIL_USER=
+EMAIL_PASS=
+```
+
+Use your own credentials, keep `.env` files out of Git, and never use the example JWT value as a real secret. Leave optional integration keys empty if the corresponding feature is not being used.
+
+Start the backend:
+
+```bash
+npm run dev
+```
+
+### 2. Configure the frontend
+
+In a second terminal:
+
+```bash
+cd client
+npm install
+```
+
+Create `client/.env` with:
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+Open the local URL printed by Vite in your terminal.
+
+## Development notes
+
+- Features may be incomplete or change while the project evolves.
+- Keep API keys and credentials in local environment files, not in source control.
+- Install dependencies with `npm install`; do not commit `node_modules/`.
+- The repository currently contains both `client/` and `Learnex-Frontend/`. Compare them before removing or consolidating either directory.
+
+## Author
+
+**Beauty Mauryaa (Nova)**  
+[GitHub profile](https://github.com/BeautyMauryaa)
